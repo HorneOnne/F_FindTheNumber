@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FaceTex:
-        m_Texture: {fileID: 2800000, guid: 9f4f0da57a8c36142b3b640166f6605f, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -67,7 +67,7 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0
+    - _OutlineWidth: 0.4
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
     - _ScaleRatioA: 0.8333333
@@ -115,11 +115,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: Docker One SDF
+  m_Name: Outline Docker One SDF
   m_EditorClassIdentifier: 
-  hashCode: -2050543711
+  hashCode: 36422049
   material: {fileID: -4364437805830744693}
-  materialHashCode: 379454177
+  materialHashCode: 773608673
   m_Version: 1.1.0
   m_SourceFontFileGUID: ba1d785169f770944a5804d3ffb2d6db
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: ba1d785169f770944a5804d3ffb2d6db, type: 3}
