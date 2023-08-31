@@ -133,7 +133,7 @@ namespace FindTheNumber
             float maxY = Mathf.Max(pA.y, pB.y, pC.y, pD.y) - offset;
 
             int attempts = 0;
-            int maxAttempts = 100;
+            int maxAttempts = 300;
 
             while (randomPoints.Count < numberOfPoints && attempts < maxAttempts)
             {
@@ -157,6 +157,79 @@ namespace FindTheNumber
                 if (validPoint)
                 {
                     randomPoints.Add(randomPoint);
+                }
+
+                attempts++;
+            }
+
+            return randomPoints;
+        }
+
+        public static List<Vector2> GetRandomPointsInRectangleWithGrid(Vector2 pA, Vector2 pB, Vector2 pC, Vector2 pD, float offset, float minDistance, int numberOfPoints, int gridResolution)
+        {
+            List<Vector2> randomPoints = new List<Vector2>();
+
+            float minX = Mathf.Min(pA.x, pB.x, pC.x, pD.x) + offset;
+            float maxX = Mathf.Max(pA.x, pB.x, pC.x, pD.x) - offset;
+            float minY = Mathf.Min(pA.y, pB.y, pC.y, pD.y) + offset;
+            float maxY = Mathf.Max(pA.y, pB.y, pC.y, pD.y) - offset;
+
+            float cellSizeX = (maxX - minX) / gridResolution;
+            float cellSizeY = (maxY - minY) / gridResolution;
+
+            List<Vector2>[,] grid = new List<Vector2>[gridResolution, gridResolution];
+
+            for (int i = 0; i < gridResolution; i++)
+            {
+                for (int j = 0; j < gridResolution; j++)
+                {
+                    grid[i, j] = new List<Vector2>();
+                }
+            }
+
+            int attempts = 0;
+            int maxAttempts = 300;
+
+            while (randomPoints.Count < numberOfPoints && attempts < maxAttempts)
+            {
+                float randomX = Random.Range(minX, maxX);
+                float randomY = Random.Range(minY, maxY);
+                Vector2 randomPoint = new Vector2(randomX, randomY);
+
+                int cellX = Mathf.FloorToInt((randomX - minX) / cellSizeX);
+                int cellY = Mathf.FloorToInt((randomY - minY) / cellSizeY);
+
+                bool validPoint = true;
+
+                for (int i = Mathf.Max(0, cellX - 1); i <= Mathf.Min(gridResolution - 1, cellX + 1); i++)
+                {
+                    for (int j = Mathf.Max(0, cellY - 1); j <= Mathf.Min(gridResolution - 1, cellY + 1); j++)
+                    {
+                        foreach (Vector2 existingPoint in grid[i, j])
+                        {
+                            if (Vector2.Distance(randomPoint, existingPoint) < minDistance)
+                            {
+                                validPoint = false;
+                                break;
+                            }
+                        }
+
+                        if (!validPoint)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (!validPoint)
+                    {
+                        break;
+                    }
+                }
+
+                if (validPoint)
+                {
+                    randomPoints.Add(randomPoint);
+                    grid[cellX, cellY].Add(randomPoint);
                 }
 
                 attempts++;
