@@ -8,11 +8,13 @@ namespace FindTheNumber
         public static event System.Action<Vector2, Vector2> OnFoundNumberAt;
 
         [Header("Data")]
-        [SerializeField] private LevelData _levelData;
+        private LevelData _levelData;
 
-        [SerializeField] private int _initNumber;
-        [SerializeField] private int _endNumber;
-        [SerializeField] private int _currentNeedFindNumber;
+        public int InitNumber{get; private set;}
+        public int EndNumber { get; private set;}
+        public int CurrentNeedFindNumber{get; private set;}
+
+
 
 
         private void Awake()
@@ -32,40 +34,42 @@ namespace FindTheNumber
 
         private void Start()
         {
-            _initNumber = 1;
-            _endNumber = _levelData.NumOfNumberBlocks;
-            _currentNeedFindNumber = _initNumber;
+            _levelData = GameManager.Instance.PlayingLevelData;
+
+            InitNumber = 1;
+            EndNumber = _levelData.NumOfNumberBlocks;
+            CurrentNeedFindNumber = InitNumber;
         }
 
         public void HandleGamelogicWhenClickNumberBlock(int number, Vector2 blockPosition)
         {
             if (CheckFoundCondition(number))
             {
-                Debug.Log($"TRUE:");
+                SoundManager.Instance.PlaySound(SoundType.HitBlock, false);
                 OnFoundNumberAt?.Invoke(blockPosition, new Vector2(_levelData.UISizeDelta, _levelData.UISizeDelta));
 
-                _currentNeedFindNumber++;
+                CurrentNeedFindNumber++;
                 bool canWin = CheckWinCondition();
                 if(canWin)
                 {
-                    Debug.Log("WIN");
+                    GameplayManager.Instance.ChangeGameState(GameplayManager.GameState.WIN);
                 }
 
             }
             else
             {
-                Debug.Log("WRONG");
+                SoundManager.Instance.PlaySound(SoundType.HitWall, false);
             }
         }
 
         public bool CheckFoundCondition(int number)
         {
-            return number == _currentNeedFindNumber;
+            return number == CurrentNeedFindNumber;
         }
 
         public bool CheckWinCondition()
         {
-            return _currentNeedFindNumber > _endNumber;
+            return CurrentNeedFindNumber > EndNumber;
         }
     }
 

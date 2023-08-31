@@ -27,8 +27,6 @@ namespace FindTheNumber
             {
                 _startTimer = true;
             };
-
-            UIGameplay.OnSwitchBtnClicked += ResetTimer;
         }
 
         private void OnDisable()
@@ -37,8 +35,6 @@ namespace FindTheNumber
             {
                 _startTimer = true;
             };
-
-            UIGameplay.OnSwitchBtnClicked -= ResetTimer;
         }
 
         private void Start()
@@ -55,14 +51,22 @@ namespace FindTheNumber
             }
         }
 
+        //public string TimeToText()
+        //{
+        //    int minutes = Mathf.FloorToInt(timer);
+        //    int seconds = Mathf.RoundToInt((timer - minutes) * 60);
+
+        //    return $"{minutes:D1}.{seconds:D2}";
+        //}
+
         public string TimeToText()
         {
-            int minutes = Mathf.FloorToInt(timer);
-            int seconds = Mathf.RoundToInt((timer - minutes) * 60);
+            int minutes = Mathf.FloorToInt(timer / 60); // Calculate whole minutes
+            int seconds = Mathf.FloorToInt(timer % 60); // Calculate remaining seconds
 
             return $"{minutes:D1}.{seconds:D2}";
-        }
 
+        }
         public string TimeToText(float value)
         {
             int minutes = Mathf.FloorToInt(value);

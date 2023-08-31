@@ -16,7 +16,7 @@ namespace FindTheNumber
 
 
         [Header("Data")]
-        [SerializeField] private LevelData _levelData;
+        private LevelData _levelData;
 
 
         private void Start()
@@ -45,7 +45,7 @@ namespace FindTheNumber
 
         private void LoadLevelData()
         {
-            //this._levelData = GameManager.Instance.PlayingLevelData;
+            this._levelData = GameManager.Instance.PlayingLevelData;
 
             var mainCam = Camera.main;
             mainCam.orthographicSize = _levelData.OrthographicCameraSize;

@@ -28,9 +28,9 @@ namespace FindTheNumber
                 if (GameLogicHandler.Instance.CheckFoundCondition(Number))
                 {
                     IsFound = true;
+                  
                 }
-            }
-           
+            }          
         }
     }
 }

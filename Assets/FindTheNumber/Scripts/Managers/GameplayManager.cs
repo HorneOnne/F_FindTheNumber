@@ -10,26 +10,22 @@ namespace FindTheNumber
         public static event System.Action OnPlaying;
         public static event System.Action OnWin;
         public static event System.Action OnGameOver;
-        public static event System.Action OnRoundFinished;
-        public static event System.Action OnStartNextRound;
 
         public enum GameState
         {
-            PLAYING,
             WAITING,
-            STARTNEXTROUND,
-            ROUNDFINISHED,
+            PLAYING,
             WIN,
             GAMEOVER,
             PAUSE,
-            UNPAUSE,
             EXIT,
         }
 
 
         [Header("Properties")]
         [SerializeField] private GameState _currentState;
-        private GameState _gameStateWhenPause;
+        [SerializeField] private float _waitTimeBeforePlaying = 0.5f;
+
 
 
         #region Properties
@@ -41,7 +37,6 @@ namespace FindTheNumber
         private void Awake()
         {
             Instance = this;
-
         }
 
         private void OnEnable()
@@ -56,7 +51,7 @@ namespace FindTheNumber
 
         private void Start()
         {
-            ChangeGameState(GameState.PLAYING);
+            ChangeGameState(GameState.WAITING);
         }
         #endregion
 
@@ -68,48 +63,39 @@ namespace FindTheNumber
             OnStateChanged?.Invoke();
         }
 
-        public void CacheGameStateWhenPause(GameState state)
-        {
-            _gameStateWhenPause = state;
-        }
 
         private void SwitchState()
         {
             switch (_currentState)
             {
                 default: break;
+                case GameState.WAITING:
+                    StartCoroutine(Utilities.WaitAfter(_waitTimeBeforePlaying, () =>
+                    {
+                        ChangeGameState(GameState.PLAYING);
+                    }));
+                    break;
                 case GameState.PLAYING:
+                    Time.timeScale = 1.0f;
 
                     OnPlaying?.Invoke();
                     break;
-                case GameState.WAITING:
-
-
-                    break;
-                case GameState.ROUNDFINISHED:
-
-                    OnRoundFinished?.Invoke();
-                    ChangeGameState(GameState.STARTNEXTROUND);
-                    break;
-                case GameState.STARTNEXTROUND:
-
-                    OnStartNextRound?.Invoke();
-                    break;
                 case GameState.WIN:
+                    SoundManager.Instance.PlaySound(SoundType.Win, false);
 
+                    StartCoroutine(Utilities.WaitAfter(1.0f, () =>
+                    {
+                        Loader.Load(Loader.Scene.MenuScene);
+                    }));
 
                     OnWin?.Invoke();
                     break;
                 case GameState.GAMEOVER:
-                  
+         
                     OnGameOver?.Invoke();
                     break;
                 case GameState.PAUSE:
                     Time.timeScale = 0.0f;
-                    break;
-                case GameState.UNPAUSE:
-                    Time.timeScale = 1.0f;
-                    _currentState = _gameStateWhenPause;
                     break;
                 case GameState.EXIT:
                     Time.timeScale = 1.0f;
